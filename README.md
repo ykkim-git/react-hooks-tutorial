@@ -13,7 +13,7 @@ const App = () => {
   const [item, setItem] = useState(3);
   const inc = () => setItem(item + 1);
   const dec = () => setItem(item - 1);
-  
+
   return (
     <div className="App">
       <h1>Hello {item}</h1>
@@ -80,10 +80,11 @@ return (
 ```
 
 ---
+___
 
 ## useEffect(function, []:리스트에 있는 값일때만 값이 변하도록 활성화됨) like componentDidmount
 
-### 컴포넌트가 렌더링 된 이후에(DOM 업데이트) 수행하고 컴포넌트 내부에 둔다. 렌더링 이후 매번 수행된다.
+### 컴포넌트가 렌더링 된 이후에(DOM 업데이트) 수행하고 컴포넌트 내부에 둔다. 렌더링 이후 매번 수행된다. 
 
 ```js
 const sayHello = () => console.log("hello");
@@ -103,6 +104,89 @@ useEffect(sayHello, [number]);
     </div>
 ```
 
-> number 버튼을 클릭했을 때만 sayHello() 실행
+___
 
+## useTitle: 문서의 제목을 업데이트 시켜주기
 
+```js
+const useTitle = (initialTitle) => {
+  const [title, setTitle] = useState(initialTitle);
+  const updateTitle = () => {
+    const htmlTitle = document.querySelector("title");
+    htmlTitle.innerText = title;
+  };
+  useEffect(updateTitle, [title]);
+  // title이 업데이트되면 updateTitle 호출
+  
+  return setTitle;
+};
+
+const App = () => {
+  const titleUpdater = useTitle("Loading...");
+  setTimeout(() => { titleUpdater("welcome home") }, 2000)
+  return <div className="App"></div>;
+};
+
+```
+Loading... -> welcome home
+___
+
+## useRef: 엘리먼트의 Reference (like getElementById)
+```js
+import React, { useState, useEffect, useRef } from "react";
+
+const App = () => {
+  const inputref = useRef(); // like getElementById
+  setTimeout(() => {
+    console.log(inputref.current); // <input placeholder="la">
+  }, 2000);
+  return (
+    <div className="App">
+      <div>hi</div>
+      <input ref={inputref} placeholder="la" />
+    </div>
+  );
+};
+```
+
+___
+
+## useClick: 클릭이벤트를 제어
+```js
+
+ // ref + 기능이 들어가있는 함수
+const useClick = (onClick) => {
+  // if (typeof onClick !== "function") {
+  //   return;
+  // }
+
+  const element = useRef();
+  useEffect(() => { // 컴포넌트가 마운트 되었을 때 (like componentDidMount) 실행
+    if (element.current) {
+      element.current.addEventListener("click", onClick);
+    }
+    /**
+     * componentWillUnMount 됐을 때 이벤트리스너 제거
+     * component가 mount되지않았을 때 이벤트리스너가 배치되지 않게 하기위해서
+     */
+    return () => {
+      if (element.current) {
+        element.current.removeEventListener("click", onClick);
+      }
+    };
+  }, []); // no defendencies
+  return element;
+};
+
+const App = () => {
+  const sayHello = () => console.log("say hello");
+  const title = useClick(sayHello);
+  return (
+    <div className="App">
+      <h1 ref={title}> Hi </h1> 
+      {/* id 같이 ref를 부여함 */}
+    </div>
+  );
+};
+
+```
