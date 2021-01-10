@@ -1,70 +1,108 @@
-# Getting Started with Create React App
+# react-hooks-tutorial
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## react hooks 예제 10가지
 
-## Available Scripts
+## useState(초기값)
 
-In the project directory, you can run:
+**현재 state 값과 state 업데이트 할 수 있는 함수를 반환 하며, 초기 State 값을 받는다.<br>
+const [state, setState] = useState(initialState);**<br>
 
-### `yarn start`
+```js
+const App = () => {
+  /** useState */
+  const [item, setItem] = useState(3);
+  const inc = () => setItem(item + 1);
+  const dec = () => setItem(item - 1);
+  
+  return (
+    <div className="App">
+      <h1>Hello {item}</h1>
+      <button onClick={inc}>increment</button>
+      <button onClick={dec}>decrement</button>
+    </div>
+  );
+};
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### useInput(초기값): 기본적으로 input을 업데이트함 (custom)
 
-### `yarn test`
+```js
+const useInput = (initialValue) => {
+  const [value, setValue] = useState(initialValue);
+  const onChange = (event) => {
+    console.log(event.target); // 값이 바뀔 때 마다 출력
+  }
+  return { value, onChange };
+};
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+const name = useInput("Mr. Jay");
 
-### `yarn build`
+<input placeholder="Name" value={name.value} onChange={name.onChange} />
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+shortcut-->
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<input placeholder="Name" {...name} >
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### add validator in useInput
 
-### `yarn eject`
+```js
+const useInput = (initialValue, validator) => {
+  const [value, setValue] = useState(initialValue);
+  const onChange = (event) => {
+    const {
+      target: { value },
+    } = event;
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+    let willUpdate = true;
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    if (typeof validator === "function") {
+      willUpdate = validator(value);
+    }
+    if (willUpdate) {
+      setValue(value);
+    }
+  };
+  return { value, onChange };
+};
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+const maxLen = (value) => value.length <= 10;
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+const name = useInput("Mr. ", maxLen);
+return (
+  <div className="App">
+    <h1>Hello</h1>
+    <input placeholder="Name" {...name} />
+  </div>
+);
+```
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## useEffect(function, []:리스트에 있는 값일때만 값이 변하도록 활성화됨) like componentDidmount
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 컴포넌트가 렌더링 된 이후에(DOM 업데이트) 수행하고 컴포넌트 내부에 둔다. 렌더링 이후 매번 수행된다.
 
-### Code Splitting
+```js
+const sayHello = () => console.log("hello");
+const [number, setNumber] = useState(0);
+const [aNumber, setAnumber] = useState(0);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+useEffect(sayHello, []); // basic
+useEffect(sayHello, [number]);
+// number를 클릭했을 때만 sayHello 실행
+```
 
-### Analyzing the Bundle Size
+```html
+<div className="App">
+      <div>Hi</div>
+      <button onClick={() => setNumber(number + 1)}>number: {number}</button>
+      <button onClick={() => setAnumber(aNumber + 1)}>aNumber: {aNumber}</button>
+    </div>
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+> number 버튼을 클릭했을 때만 sayHello() 실행
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
