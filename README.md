@@ -191,7 +191,7 @@ const App = () => {
 
 ```
 
-## confirm 만들기 (함수형 프로그래밍 예제)
+## confirm 만들기 (함수형 프로그래밍 예제 no hooks)
 ```js
 const useConfirm = (message = "", onConfirm, onCancel) => {
   /** 유효성 검사 */
@@ -222,4 +222,33 @@ const App = () => {
     </div>
   );
 };
+```
+
+___
+
+## usePreventLeave: window 닫을 때 저장하지 않음을 알리는 기능 (no hooks)
+```js
+const usePreventLeave = () => {
+  const listener = (event) => {
+    event.preventDefault();
+    event.returnValue = "";
+  };
+  /** beforeUnload: window가 닫히기전에 function이 실행되는것을 허락함 */
+  const enablePrevent = () => window.addEventListener("beforeunload", listener);
+  const disablePrevent = () =>
+    window.removeEventListener("beforeunload", listener);
+
+  return { enablePrevent, disablePrevent };
+};
+
+const App = () => {
+  const { enablePrevent, disablePrevent } = usePreventLeave();
+  return (
+  <div className="App">
+    <button onClick={enablePrevent}>Protect</button>
+    <button onClick={disablePrevent}>UnProtect</button>
+  </div>
+  )
+};
+
 ```
