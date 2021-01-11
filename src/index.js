@@ -6,27 +6,32 @@ import "./index.css";
  * Hook을 이용하여 Class를 작성할 필요 없이 상태값과 여러 React의 기능을 사용할 수 있다.
  */
 
-const usePreventLeave = () => {
-  const listener = (event) => {
-    event.preventDefault();
-    event.returnValue = "";
-  };
-  /** beforeUnload: window가 닫히기전에 function이 실행되는것을 허락함 */
-  const enablePrevent = () => window.addEventListener("beforeunload", listener);
-  const disablePrevent = () =>
-    window.removeEventListener("beforeunload", listener);
+const useBeforeLeave = (onBefore) => {
+  // if (typeof onBefore !== "function") {
+  //   return;
+  // }
 
-  return { enablePrevent, disablePrevent };
+  const handle = (event) => {
+    const { clientY } = event;
+    if (clientY <= 0) { // 마우스를 위쪽으로 벗어나면 작동
+      onBefore();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mouseleave", handle);
+    return () => document.removeEventListener("mouseleave", handle);
+  }, []); // 한번만 이벤트리스너가 추가되도록 [] 추가
 };
 
 const App = () => {
-  const { enablePrevent, disablePrevent } = usePreventLeave();
+  const begForLife = () => console.log("please dont leave...");
+  useBeforeLeave(begForLife);
   return (
-  <div className="App">
-    <button onClick={enablePrevent}>Protect</button>
-    <button onClick={disablePrevent}>UnProtect</button>
-  </div>
-  )
+    <div className="App">
+      <h1>hi</h1>
+    </div>
+  );
 };
 
 ReactDOM.render(

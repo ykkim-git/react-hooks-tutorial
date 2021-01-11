@@ -252,3 +252,36 @@ const App = () => {
 };
 
 ```
+
+___
+
+## useBeforeLeave: 페이지를 벗어날 때 notice (useEffect)
+```js
+const useBeforeLeave = (onBefore) => {
+  // if (typeof onBefore !== "function") {
+  //   return;
+  // }
+
+  const handle = (event) => {
+    const { clientY } = event;
+    if (clientY <= 0) { // 마우스를 위쪽으로 벗어나면 작동
+      onBefore();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mouseleave", handle);
+    return () => document.removeEventListener("mouseleave", handle);
+  }, []); // 한번만 이벤트리스너가 추가되도록 [] 추가
+};
+
+const App = () => {
+  const begForLife = () => console.log("please dont leave...");
+  useBeforeLeave(begForLife);
+  return (
+    <div className="App">
+      <h1>hi</h1>
+    </div>
+  );
+};
+```
