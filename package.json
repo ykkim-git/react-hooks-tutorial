@@ -1,7 +1,7 @@
 {
-  "name": "react-hooks-tutorial",
+  "name": "@hooksykkim/react-hooks-ykkim",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -32,5 +32,25 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "## react hooks 예제 10가지",
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ykkim-git/react-hooks-tutorial.git"
+  },
+  "keywords": [
+    "react",
+    "react",
+    "hooks",
+    "title",
+    "hooks"
+  ],
+  "author": "youngkwonkim <rladudrnjs12@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ykkim-git/react-hooks-tutorial/issues"
+  },
+  "homepage": "https://github.com/ykkim-git/react-hooks-tutorial#readme"
 }

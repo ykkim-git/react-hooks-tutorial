@@ -394,3 +394,71 @@ const App = () => {
 ___
 
 ## useAxios: axios 통신 기능
+
+```js
+in useAxios.js
+
+import defaultAxios from "axios";
+import { useState, useEffect } from "react";
+
+const useAxios = (opts, axiosInstance = defaultAxios) => {
+  const [state, setState] = useState({
+    loading: true,
+    error: null,
+    data: null
+  });
+
+  useEffect(() => {
+    axiosInstance(opts)
+      .then((data) => {
+        setState({
+          ...state,
+          loading: false,
+          data
+        });
+      })
+      .catch((error) => {
+        setState({
+          ...state,
+          loading: false,
+          error
+        });
+      });
+  });
+  return state;
+};
+
+
+in index.js
+
+import useAxios from "./useAxios.js";
+
+const App = () => {
+  const { loading, data, error } = useAxios({
+    url:
+      "https://cors-anywhere.herokuapp.com/https://yts.am/api/v2/list_movies.json"
+  });
+  console.log(
+    `Loading: ${loading}\n 
+    Error: ${error}\n  
+    data: ${JSON.stringify(data)}`
+  );
+  return (
+    <div className="App">
+      <h1>hello</h1>
+    </div>
+  );
+};
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById("root")
+);
+
+
+export default useAxios;
+
+
+```
