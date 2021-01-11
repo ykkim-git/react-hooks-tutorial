@@ -7,37 +7,32 @@ import "./index.css";
  * Hook을 이용하여 Class를 작성할 필요 없이 상태값과 여러 React의 기능을 사용할 수 있다.
  */
 
- // ref + 기능이 들어가있는 함수
-const useClick = (onClick) => {
-  // if (typeof onClick !== "function") {
-  //   return;
-  // }
+const useConfirm = (message = "", onConfirm, onCancel) => {
+  if (!onConfirm && typeof callback !== "function") {
+    return;
+  }
 
-  const element = useRef();
-  useEffect(() => { // 컴포넌트가 마운트 되었을 때 (like componentDidMount) 실행
-    if (element.current) {
-      element.current.addEventListener("click", onClick);
+  if (onCancel && typeof onCancel !== "function") {
+    return;
+  }
+  
+  const confirmAction = () => {
+    if (window.confirm(message)) {
+      onConfirm();
+    } else {
+      onCancel();
     }
-    /**
-     * componentWillUnMount 됐을 때 이벤트리스너 제거
-     * component가 mount되지않았을 때 이벤트리스너가 배치되지 않게 하기위해서
-     */
-    return () => {
-      if (element.current) {
-        element.current.removeEventListener("click", onClick);
-      }
-    };
-  }, []); // no defendencies
-  return element;
+  };
+  return confirmAction;
 };
 
 const App = () => {
-  const sayHello = () => console.log("say hello");
-  const title = useClick(sayHello);
+  const deleteWorld = () => console.log("Deleting the world......");
+  const abort = () => console.log("Aborted");
+  const confirmDelete = useConfirm("Are you sure?", deleteWorld, abort);
   return (
     <div className="App">
-      <h1 ref={title}> Hi </h1> 
-      {/* id 같이 ref를 부여함 */}
+      <button onClick={confirmDelete}>Delete the world</button>
     </div>
   );
 };

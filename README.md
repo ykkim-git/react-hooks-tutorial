@@ -190,3 +190,36 @@ const App = () => {
 };
 
 ```
+
+## confirm 만들기 (함수형 프로그래밍 예제)
+```js
+const useConfirm = (message = "", onConfirm, onCancel) => {
+  /** 유효성 검사 */
+  if (!onConfirm && typeof callback !== "function") {
+    return;
+  }
+  /** 유효성 검사 */
+  if (onCancel && typeof onCancel !== "function") {
+    return;
+  }
+
+  const confirmAction = () => {
+    if (window.confirm(message)) {
+      onConfirm();
+    } else {
+      onCancel();
+    }
+  };
+  return confirmAction;
+};
+const App = () => {
+  const deleteWorld = () => console.log("Deleting the world......");
+  const abort = () => console.log("Aborted");
+  const confirmDelete = useConfirm("Are you sure?", deleteWorld, abort);
+  return (
+    <div className="App">
+      <button onClick={confirmDelete}>Delete the world</button>
+    </div>
+  );
+};
+```
