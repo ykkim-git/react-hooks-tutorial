@@ -285,3 +285,110 @@ const App = () => {
   );
 };
 ```
+
+___
+
+## useFadeIn: 애니메이션 추가
+```js
+
+const useFadeIn = (duration = 1, delay = 0) => {
+  const element = useRef();
+  useEffect(() => {
+    if (element.current) {
+      const { current } = element;
+      current.style.opacity = 1;
+      current.style.transition = `opacity ${duration}s ease-in-out ${delay}s`;
+    }
+  }, []);
+  return { ref: element, style: { opacity: 0 } };
+};
+
+const App = () => {
+  const fadeInH1 = useFadeIn(1, 2);
+  const fadeInP = useFadeIn(3, 5);
+  return (
+    <div className="App">
+      <h1 {...fadeInH1}>hi</h1>
+      <p {...fadeInP}> lalalalalala</p>
+    </div>
+  );
+};
+
+```
+
+___
+
+## useNetwork: navigator가 online또는 offline이 되는것을 막아주기
+
+```js
+
+const useNetwork = (onChange) => {
+  const [status, setStatue] = useState(navigator.onLine);
+  const handleChange = () => {
+    if (typeof onChange === "function") {
+      onChange(navigator.onLine);
+    }
+    setStatue(navigator.onLine);
+  };
+  useEffect(() => {
+    window.addEventListener("online", handleChange);
+    window.addEventListener("offline", handleChange);
+
+    window.removeEventListener("online", handleChange);
+    window.removeEventListener("offline", handleChange);
+  }, []);
+  return status;
+};
+
+const App = () => {
+  const handleNeyworkChange = (online) => {
+    console.log(online ? "We Just went Online" : "We are offline");
+  };
+  const onLine = useNetwork(handleNeyworkChange);
+  return (
+    <div className="App">
+      <h1>{onLine ? "Online" : "Offline"}</h1>
+    </div>
+  );
+};
+
+```
+
+___
+
+## useNotification: 알람을 실행해주는 기능
+```js
+const useNotification = (title, options) => {
+  // if (!("Notification" in window)) {
+  //   return;
+  // }
+  const fireNotif = () => {
+    if (Notification.permission !== "granted") {
+      // notification 권한요청
+      Notification.requestPermission().then((permission) => {
+        if (permission === "granted") { // 허용했을 때
+          new Notification(title, options);
+        } else {
+          return;
+        }
+      });
+    } else {
+      new Notification(title, options);
+    }
+  };
+  return fireNotif;
+};
+
+const App = () => {
+  const triggerNotif = useNotification("can I steel your kimchi?", {
+    body: "i love js",
+  });
+  return (
+    <div className="App">
+      <button onClick={triggerNotif}>hello</button>
+    </div>
+  );
+};
+
+
+```
