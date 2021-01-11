@@ -1,40 +1,20 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
-
-/**
- * React hook (version 16.8)ㅐ
- * Hook을 이용하여 Class를 작성할 필요 없이 상태값과 여러 React의 기능을 사용할 수 있다.
- */
-
-const useNotification = (title, options) => {
-  // if (!("Notification" in window)) {
-  //   return;
-  // }
-  const fireNotif = () => {
-    if (Notification.permission !== "granted") {
-      // notification 권한요청
-      Notification.requestPermission().then((permission) => {
-        if (permission === "granted") {
-          new Notification(title, options);
-        } else {
-          return;
-        }
-      });
-    } else {
-      new Notification(title, options);
-    }
-  };
-  return fireNotif;
-};
+import useAxios from "./useAxios.js";
 
 const App = () => {
-  const triggerNotif = useNotification("can I steel your kimchi?", {
-    body: "i love js",
+  const { loading, data, error } = useAxios({
+    url:
+      "https://cors-anywhere.herokuapp.com/https://yts.am/api/v2/list_movies.json"
   });
+  console.log(
+    `Loading: ${loading}\n 
+    Error: ${error}\n  
+    data: ${JSON.stringify(data)}`
+  );
   return (
     <div className="App">
-      <button onClick={triggerNotif}>hello</button>
+      <h1>hello</h1>
     </div>
   );
 };
