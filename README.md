@@ -1,6 +1,10 @@
 # react-hooks-tutorial
 
 ## react hooks 예제 10가지
+## react hooks가 개발 된 이유
+1. 클래스 컴포넌트는 로직들을 재사용하기 어렵다.
+2. 구현한 Lifecycle 메소드들에 관련이 없는 로직들이 포함되곤 한다.
+3. 클래스는 컴퓨터와 인간 모두에게 이해하기 어려운 개념이다.
 
 ## useState(초기값)
 
